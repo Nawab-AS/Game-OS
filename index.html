@@ -20,6 +20,8 @@
             </div>
             
             <iframe :src="window.url" frameborder="0"></iframe>
+
+            <div class="resize-handle" @mousedown="startResize($event, window)"></div>
         </div>
     </div>
 </body>

@@ -10,8 +10,8 @@ setTimeout(() => {
         height: 300,
         x: 100,
         y: 100,
-        minWidth: 400,
-        minHeight: 300,
+        minWidth: 150,
+        minHeight: 150,
     });
 }, 1000);
 
@@ -52,21 +52,61 @@ function startDrag(e, window) {
     };
 }
 
-document.addEventListener('mouseup', (e) => {
-    if (!dragData) return;
+// Resizing windows
+let resizeData = null;
+function startResize(e, window) {
+    if (e.button !== 0) return; // left click
     e.preventDefault();
     e.stopPropagation();
-    dragData = null;
+    resizeData = {
+        window,
+        startX: e.clientX,
+        startY: e.clientY,
+        origW: window.width,
+        origH: window.height,
+        minW: window.minWidth || 100,
+        minH: window.minHeight || 80
+    };
+    // prevent text selection while resizing
+    document.body.style.userSelect = 'none';
+}
+
+document.addEventListener('mouseup', (e) => {
+    if (dragData) {
+        e.preventDefault();
+        e.stopPropagation();
+        dragData = null;
+    }
+    if (resizeData) {
+        e.preventDefault();
+        e.stopPropagation();
+        resizeData = null;
+        document.body.style.userSelect = '';
+    }
 });
 
 document.addEventListener('mousemove', (e) => {
-    if (!dragData) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const dx = e.clientX - dragData.startX;
-    const dy = e.clientY - dragData.startY;
-    dragData.window.x = dragData.origX + dx;
-    dragData.window.y = dragData.origY + dy;
+    if (dragData) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dx = e.clientX - dragData.startX;
+        const dy = e.clientY - dragData.startY;
+        dragData.window.x = dragData.origX + dx;
+        dragData.window.y = dragData.origY + dy;
+        return;
+    }
+
+    if (resizeData) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dx = e.clientX - resizeData.startX;
+        const dy = e.clientY - resizeData.startY;
+        let newW = Math.max(resizeData.minW, Math.round(resizeData.origW + dx));
+        let newH = Math.max(resizeData.minH, Math.round(resizeData.origH + dy));
+        resizeData.window.width = newW;
+        resizeData.window.height = newH;
+        return;
+    }
 });
 
 
@@ -79,6 +119,7 @@ const app = createApp({
             windows,
             closeWindow,
             startDrag,
+            startResize,
         }
     }
 });
