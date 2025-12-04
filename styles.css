@@ -3,6 +3,13 @@
 [v-cloak] {display: none;}
 * {font-family: 'Science Gothic', Arial, sans-serif;}
 
+:root {
+    --taskbar-height: 35px;
+    --taskbar-hover-color: #444;
+}
+
+
+/* Windows */
 #windowManager {
     width: 0;
     height: 0;
@@ -15,6 +22,7 @@
     box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
     overflow: auto;
     box-sizing: border-box;
+    z-index: 99;
 }
 
 .window iframe {
@@ -95,4 +103,88 @@
     to {
         opacity: 0;
     }
+}
+
+
+/* Taskbar */
+#screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-color: #0780e3;
+}
+
+#taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: var(--taskbar-height);
+    padding: 0;
+    background-color: #222;
+    z-index: 10;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+#taskbar div {
+    display: flex;
+    align-items: center;
+}
+
+
+#linuxButton {
+    margin-left: 5px;
+    width: 45px;
+    height: var(--taskbar-height);
+    background-color: #00000000;
+    background-image: url("./linux.png");
+    background-size: 60% 75%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+#linuxButton:hover {
+    background-color: var(--taskbar-hover-color);
+}
+
+#searchBox {
+    margin: 0;
+    width: 200px;
+    height: calc(var(--taskbar-height) * 0.95);
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    cursor: text;
+    transition-duration: 0.3s;
+}
+
+#searchBox:hover {
+    background-color: #444;
+}
+
+#searchBox:focus {
+    background-color: #555;
+}
+
+#timeDisplay {
+    height: var(--taskbar-height);
+    padding: 0 7px;
+    color: #777;
+    font-size: 14px;
+    user-select: none;
+    transition-duration: 0.3s;
+}
+
+#timeDisplay:hover {
+    background-color: var(--taskbar-hover-color);
 }

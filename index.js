@@ -1,6 +1,7 @@
 const { createApp, reactive, ref } = Vue;
 
 const windows = reactive([]);
+const currentTime = ref('');
 
 setTimeout(() => {
     createWindow({
@@ -109,6 +110,31 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+// linux menu
+const search = ref(null);
+function openSearch() {
+    document.getElementById('searchBox').focus();
+    search.value = '';
+}
+
+function closeSearch() {
+    search.value = null;
+}
+
+
+// time
+function updateTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    currentTime.value = `${hours}:${minutes} ${ampm}`;
+}
+setInterval(updateTime, 1000);
+updateTime();
 
 
 
@@ -120,6 +146,10 @@ const app = createApp({
             closeWindow,
             startDrag,
             startResize,
+            currentTime,
+            openSearch,
+            closeSearch,
+            search,
         }
     }
 });

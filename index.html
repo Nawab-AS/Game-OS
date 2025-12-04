@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body v-cloak>
+    <div id="screen">
+        <div id="taskbar">
+            <div class="leftSection">
+                <button id="linuxButton" @click="openSearch"></button>
+                <input id="searchBox" placeholder="Type here to search" @focus="openSearch" @blur="closeSearch" v-model="search"/>
+            </div>
+            <div class="rightSection">
+                <div id="timeDisplay">{{ currentTime }}</div>
+            </div>
+        </div>
+    </div>
+
     <div id="windowManager" v-for="window in windows" :key="window.id">
         <div :class="['window', window.anim]" :style="{ top: window.y + 'px', left: window.x + 'px',
                     width: window.width + 'px', height: window.height + 'px',
