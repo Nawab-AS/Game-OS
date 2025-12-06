@@ -16,7 +16,7 @@
             <div class="leftSection">
                 <button id="linuxButton" @click="openSearch"></button>
                 <input id="searchBox" placeholder="Type here to search!" @focus="openSearch"
-                        @blur="closeSearch" v-model="search"/>
+                        @blur="search = null" v-model="search"/>
 
                 <div id="appList">
                     <div id="newWindow" @click="createWindow(appName)"
@@ -26,9 +26,11 @@
                         <img :src="app.icon" alt="" width="24" height="24"/>
                         <p>{{ appName }}</p>
                         <div id="windowList" v-show="hoveredApp === appName">
-                            <p v-for="window in windows.filter(w => w.app === appName)" :key="window.id" @click="focusWindow($event, window.id, true)">
-                                {{ window.app }}
-                            </p>
+                            <div v-for="window in windows.filter(w => w.app === appName)" :key="window.id" @click="focusWindow($event, window.id, true)"
+                                    :style="{ backgroundColor: window.hidden ? '#888' : '#555' }">
+                                <p>{{ window.app }}</p>
+                                <button @click.stop="closeWindow($event, window.id)">X</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,7 +45,7 @@
     <div id="windowManager">
         <div v-for="window in windows" :key="window.id">
 
-            <div :class="['window', window.anim]" :style="{ top: (window.hidden ? Infinity : window.y) + 'px', left: window.x + 'px',
+            <div :class="['window', window.anim]" :style="{ top: (window.hidden ? 999999 : window.y) + 'px', left: window.x + 'px',
                     width: window.width + 'px', height: window.height + 'px',
                     minWidth: window.minWidth + 'px', minHeight: window.minHeight + 'px', zIndex: window.z }"
                     @mousedown="bringToFront($event, window.id)">
@@ -54,8 +56,8 @@
                         <h2>{{ window.app }}</h2>
                     </div>
                     <div id="windowButtons">
-                        <button class="minimize" @click="minimizeWindow($event, window.id)">-</button>
-                        <button class="close" @click="closeWindow($event, window.id)">X</button>
+                        <button class="minimize" @click.stop="minimizeWindow($event, window.id)">-</button>
+                        <button class="close" @click.stop="closeWindow($event, window.id)">X</button>
                     </div>
                 </div>
                 

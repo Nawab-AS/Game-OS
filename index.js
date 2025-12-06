@@ -25,7 +25,6 @@ function createWindow(appname, options={}) {
 }
 
 function closeWindow(e, id) {
-    e.stopPropagation();
     const i = windows.findIndex(win => win.id === id);
     if (i == -1) return;
     windows[i].anim = 'closing';
@@ -40,7 +39,7 @@ function bringToFront(e, id) {
     if (!window) return;
     if (window.hidden) {
         window.hidden = false;
-        window.anim = 'unhiding';
+        window.anim = 'unminimizing';
         setTimeout(() => {
             window.anim = '';
         }, 300);
@@ -140,14 +139,17 @@ function focusWindow(e, id, windowList=false) {
     if (windowList) {
         if (window.hidden) {
             window.hidden = false;
-            window.anim = 'unhiding';
             setTimeout(() => {
-                window.anim = '';
-            }, 300);
+                window.anim = 'unminimizing';
+                setTimeout(() => {
+                    window.anim = '';
+                }, 200);
+            }, 100);
+        } else {
+            minimizeWindow(e, id);
+            return;
         }
-        return;
     }
-    alert('TODO: implement\nFocus window: ' + id);
 }
 
 
@@ -156,10 +158,6 @@ const search = ref(null);
 function openSearch() {
     document.getElementById('searchBox').focus();
     search.value = '';
-}
-
-function closeSearch() {
-    search.value = null;
 }
 
 
@@ -191,7 +189,6 @@ const app = createApp({
             startResize,
             currentTime,
             openSearch,
-            closeSearch,
             search,
             apps,
             bringToFront,

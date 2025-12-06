@@ -22,4 +22,15 @@ const apps = {
         "minWidth": 400,
         "minHeight": 540,
     },
+
+    "Reddit": {
+        "url": "https://www.reddit.com/",
+        "icon": "https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png",
+        "description": "Browse Reddit in a window.",
+        "category": "Web",
+        "width": 900,
+        "height": 700,
+        "minWidth": 600,
+        "minHeight": 400,
+    },
 };

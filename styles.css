@@ -110,6 +110,27 @@ body {margin: 0; padding: 0; overflow: hidden;}
     animation-timing-function: linear;
 }
 
+.unminimizing {
+    animation: shrink-reverse;
+    animation-duration: 0.2s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
+@keyframes shrink-reverse {
+    from {
+        transform: scale(0);
+        opacity: 0;
+        top: calc(100vh - var(--taskbar-height));
+        left: calc(50vw - 200px);
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 .resize-handle {
     position: absolute;
     width: 10px;
@@ -289,20 +310,52 @@ selects #newWindow but NOT the div#windowList or its children when hovered */
     bottom: var(--taskbar-height);
 }
 
-#windowList > p {
+#windowList > div {
     margin: 0;
-    margin-bottom: 2px;
-    padding: 2px 5px;
-    transform: translateX(-5px);
-    height: 20px;
+    padding: 0;
+    transform: translateX(5px);
+    height: 23px;
     width: calc(var(--taskbar-app-width) - 5px);
-    background-color: #333;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#windowList > div > p {
+    margin: 0;
+    padding: 2px 5px;
     color: #fff;
     font-size: 12px;
     border-radius: 3px;
     cursor: pointer;
     user-select: none;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+#windowList > div:hover {
+    background-color: var(--taskbar-hover-color);
+}
+
+#windowList > div > button {
+    margin-right: 2px;
+    padding: 2px 5px;
+    height: 20px;
+    border: none;
+    background-color: #eb3030;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 
 
 /* left section of taskbar */
@@ -314,6 +367,8 @@ selects #newWindow but NOT the div#windowList or its children when hovered */
     font-size: 14px;
     user-select: none;
     transition-duration: 0.3s;
+    display: flex;
+    align-items: center;
 }
 
 #timeDisplay:hover {
