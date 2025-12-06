@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games-OS</title>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="./apps.js"></script>
     <script src="./index.js" defer></script>
@@ -14,12 +15,21 @@
         <div id="taskbar">
             <div class="leftSection">
                 <button id="linuxButton" @click="openSearch"></button>
-                <input id="searchBox" placeholder="Type here to search!" @focus="openSearch" @blur="closeSearch" v-model="search"/>
+                <input id="searchBox" placeholder="Type here to search!" @focus="openSearch"
+                        @blur="closeSearch" v-model="search"/>
 
-                <div id="appList" v-for="(app, appName) in apps" :key="appName">
-                    <div @click="createWindow(appName)" :class="[windows.some(w => w.app === appName) ? 'open' : '']">
+                <div id="appList">
+                    <div id="newWindow" @click="createWindow(appName)"
+                            :class="[windows.some(w => w.app === appName) ? 'open' : '']"
+                            @mouseenter="hoveredApp = appName" @mouseleave="hoveredApp = null"
+                            v-for="(app, appName) in apps" :key="appName">
                         <img :src="app.icon" alt="" width="24" height="24"/>
                         <p>{{ appName }}</p>
+                        <div id="windowList" v-show="hoveredApp === appName">
+                            <p v-for="window in windows.filter(w => w.app === appName)" :key="window.id" @click="focusWindow($event, window.id, true)">
+                                {{ window.app }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -30,23 +40,29 @@
         </div>
     </div>
 
-    <div id="windowManager" v-for="window in windows" :key="window.id">
-        <div :class="['window', window.anim]" :style="{ top: window.y + 'px', left: window.x + 'px',
+    <div id="windowManager">
+        <div v-for="window in windows" :key="window.id">
+
+            <div :class="['window', window.anim]" :style="{ top: (window.hidden ? Infinity : window.y) + 'px', left: window.x + 'px',
                     width: window.width + 'px', height: window.height + 'px',
                     minWidth: window.minWidth + 'px', minHeight: window.minHeight + 'px', zIndex: window.z }"
-                    @mousedown="bringToFront($event, window.id)" :style="{display: (hide?'none':'block')}">
-
-            <div id="titlebar" @mousedown="startDrag($event, window)">
-                <div style="display: inline-flex; align-items: center;">
-                    <img :src="window.icon" alt="" width="24" height="24"/>
-                    <h2>{{ window.title }}</h2>
+                    @mousedown="bringToFront($event, window.id)">
+                    
+                <div id="titlebar" @mousedown="startDrag($event, window)">
+                    <div style="display: inline-flex; align-items: center;">
+                        <img :src="window.icon" alt="" width="24" height="24"/>
+                        <h2>{{ window.app }}</h2>
+                    </div>
+                    <div id="windowButtons">
+                        <button class="minimize" @click="minimizeWindow($event, window.id)">-</button>
+                        <button class="close" @click="closeWindow($event, window.id)">X</button>
+                    </div>
                 </div>
-                <button @click="closeWindow($event, window.id)">X</button>
+                
+                <iframe :src="window.url" frameborder="0" :style="{ pointerEvents: editingWindow ? 'none' : 'auto' }"></iframe>
+    
+                <div class="resize-handle" @mousedown="startResize($event, window)"></div>
             </div>
-            
-            <iframe :src="window.url" frameborder="0"></iframe>
-
-            <div class="resize-handle" @mousedown="startResize($event, window)"></div>
         </div>
     </div>
 </body>

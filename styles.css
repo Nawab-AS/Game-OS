@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&display=swap');
 
 [v-cloak] {display: none;}
+body {margin: 0; padding: 0; overflow: hidden;}
 * {font-family: 'Science Gothic', Arial, sans-serif;}
 
 :root {
     --taskbar-height: 35px;
     --taskbar-hover-color: #444;
+    --taskbar-app-width: 150px;
 }
 
 
@@ -20,14 +22,19 @@
     border: 2px solid #000;
     background-color: #fff;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
-    overflow: auto;
+    overflow: hidden;
     box-sizing: border-box;
     z-index: 99;
 }
 
 .window iframe {
+    position: absolute;
+    top: 30px;
+    left: 0;
     width: 100%;
     height: calc(100% - 30px);
+    border: none;
+    display: block;
 }
 
 .window #titlebar {
@@ -47,10 +54,14 @@
     margin-left: 5px;
 }
 
-.window #titlebar button {
-    background-color: #eb3030;
-    border: none;
-    color: white;
+#windowButtons {
+    display: flex;
+    gap: 5px;
+    margin-right: 5px;
+}
+
+#windowButtons button {
+    cursor: pointer;
     padding: 2px 8px;
     height: 20px;
     display: flex;
@@ -59,9 +70,16 @@
     border-radius: 2px;
 }
 
-.window iframe {
+#windowButtons .close {
+    background-color: #eb3030;
     border: none;
-    display: block;
+    color: white;
+}
+
+#windowButtons .minimize {
+    background-color: #f2d024;
+    border: none;
+    color: white;
 }
 
 .opening {
@@ -83,6 +101,15 @@
     animation-timing-function: steps(2);
 }
 
+.minimizing {
+    animation: shrink;
+    animation-delay: 0.1s;
+    animation-duration: 0.2s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
 .resize-handle {
     position: absolute;
     width: 10px;
@@ -102,6 +129,19 @@
     }
     to {
         opacity: 0;
+    }
+}
+
+@keyframes shrink {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0);
+        opacity: 0;
+        top: calc(100vh - var(--taskbar-height));
+        left: calc(50vw - 200px);
     }
 }
 
@@ -131,7 +171,7 @@
     justify-content: space-between;
 }
 
-#taskbar div {
+#taskbar > div {
     display: flex;
     align-items: center;
 }
@@ -186,26 +226,86 @@
     gap: 5px;
 }
 
-#appList div {
+#appList > #newWindow {
     color: #ccc;
     height: var(--taskbar-height);
+    width: var(--taskbar-app-width);
+    text-align: center;
+    text-overflow: ellipsis;
     padding: 0 7px;
     font-size: 14px;
     cursor: pointer;
     user-select: none;
     transition-duration: 0.2s;
+    display: flex;
+    align-items: center;
 }
 
-#appList div.open {
-    height: calc(var(--taskbar-height) - 3px);
-    border-bottom: 3px solid #fff;
+#appList > #newWindow > img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+#appList > #newWindow > p {
+    margin: 0;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#appList > #newWindow.open {
+    height: calc(var(--taskbar-height) - 3.5px);
+    border-bottom: 3.5px solid #fff;
     color: #fff;
 }
 
-#appList div:hover {
+
+/* AI generated selector lol
+selects #newWindow but NOT the div#windowList or its children when hovered */
+#appList > #newWindow:hover:not(:has(#windowList:hover, #windowList *:hover)) {
     background-color: var(--taskbar-hover-color);
     color: #fff;
 }
+
+#appList > #newWindow:hover:not(:has(:not(p):hover)),
+#appList > #newWindow > p:hover {
+    background-color: var(--taskbar-hover-color);
+}
+
+#appList > #newWindow:hover:not(:has(:not(p):hover)),
+#appList > #newWindow > p:hover {
+    background-color: var(--taskbar-hover-color);
+}
+
+
+#appList > #newWindow:hover {
+    background-color: var(--taskbar-hover-color);
+    color: #fff;
+}
+
+#windowList {
+    position: absolute;
+    bottom: var(--taskbar-height);
+}
+
+#windowList > p {
+    margin: 0;
+    margin-bottom: 2px;
+    padding: 2px 5px;
+    transform: translateX(-5px);
+    height: 20px;
+    width: calc(var(--taskbar-app-width) - 5px);
+    background-color: #333;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+/* left section of taskbar */
 
 #timeDisplay {
     height: var(--taskbar-height);

@@ -2,8 +2,8 @@ const { createApp, reactive, ref } = Vue;
 
 const windows = reactive([]);
 const currentTime = ref('');
-const openApps = reactive({});
-for (const appname in apps) openApps[appname] = [];
+const hoveredApp = ref(null);
+const editingWindow = ref(false);
 let topZ = 99;
 
 setTimeout(() => {
@@ -11,19 +11,17 @@ setTimeout(() => {
 }, 1000);
 
 
-
 // Opening/closing windows
 function createWindow(appname, options={}) {
     options={...apps[appname], ...options};
     const id = Math.random().toString(36).substring(2, 9);
     if (options.url.startsWith('./')) options.url = (new URL(options.url, window.location.href)).href; // convert to absolute URL
-    
-    windows.push({ ...options, id, anim: 'opening', app: appname, hide: false, z: ++topZ });
+    if (options.x === undefined) options.x = Math.random() * (window.innerWidth - options.width);
+    if (options.y === undefined) options.y = Math.random() * (window.innerHeight - options.height - 40) + 40;
+    windows.push({ ...options, id, anim: 'opening', app: appname, hidden: false, z: ++topZ });
     setTimeout(() => {
         windows.find(w => w.id == id).anim = '';
     }, 300);
-
-    openApps[appname].push(id);
 }
 
 function closeWindow(e, id) {
@@ -34,14 +32,19 @@ function closeWindow(e, id) {
     setTimeout(() => {
         windows.splice(i, 1);
     }, 300);
-
-    openApps[windows[i].app] = openApps[windows[i].app].filter(wid => wid !== id);
 }
 
-function bringToFront(e, id) { // TODO: fix
+function bringToFront(e, id) {
     e.stopPropagation();
     const window = windows.find(win => win.id === id);
     if (!window) return;
+    if (window.hidden) {
+        window.hidden = false;
+        window.anim = 'unhiding';
+        setTimeout(() => {
+            window.anim = '';
+        }, 300);
+    }
     window.z = ++topZ;
     windows.sort((a, b) => a.z - b.z);
 }
@@ -59,6 +62,7 @@ function startDrag(e, window) {
         origX: window.x,
         origY: window.y
     };
+    editingWindow.value = true;
 }
 
 // Resizing windows
@@ -78,6 +82,7 @@ function startResize(e, window) {
     };
     // prevent text selection while resizing
     document.body.style.userSelect = 'none';
+    editingWindow.value = true;
 }
 
 document.addEventListener('mouseup', (e) => {
@@ -92,6 +97,7 @@ document.addEventListener('mouseup', (e) => {
         resizeData = null;
         document.body.style.userSelect = '';
     }
+    editingWindow.value = false;
 });
 
 document.addEventListener('mousemove', (e) => {
@@ -113,6 +119,37 @@ document.addEventListener('mousemove', (e) => {
         return;
     }
 });
+
+
+// hiding/showing windows
+function minimizeWindow(e, id) {
+    e.stopPropagation();
+    const window = windows.find(win => win.id === id);
+    if (!window) return;
+    window.anim = 'minimizing';
+    setTimeout(() => {
+        window.hidden = true;
+    }, 300);
+}
+
+
+function focusWindow(e, id, windowList=false) {
+    const window = windows.find(w => w.id === id);
+    if (!window) return;
+    e.stopPropagation();
+    if (windowList) {
+        if (window.hidden) {
+            window.hidden = false;
+            window.anim = 'unhiding';
+            setTimeout(() => {
+                window.anim = '';
+            }, 300);
+        }
+        return;
+    }
+    alert('TODO: implement\nFocus window: ' + id);
+}
+
 
 // linux menu
 const search = ref(null);
@@ -149,6 +186,7 @@ const app = createApp({
             windows,
             createWindow,
             closeWindow,
+            editingWindow,
             startDrag,
             startResize,
             currentTime,
@@ -157,6 +195,9 @@ const app = createApp({
             search,
             apps,
             bringToFront,
+            minimizeWindow,
+            focusWindow,
+            hoveredApp,
         }
     }
 });

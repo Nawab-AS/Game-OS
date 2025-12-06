@@ -8,9 +8,18 @@ const apps = {
 
         "width": 600,
         "height": 400,
-        "x": 100,
-        "y": 100,
         "minWidth": 400,
         "minHeight": 300,
+    },
+
+    "Tic Tac Toe": {
+        "url": "./games/tic-tac-toe/index.html",
+        "icon": "./games/tic-tac-toe/icon.svg",
+        "description": "Play Tic Tac Toe against the computer!",
+        "category": "Game",
+        "width": 400,
+        "height": 540,
+        "minWidth": 400,
+        "minHeight": 540,
     },
 };
