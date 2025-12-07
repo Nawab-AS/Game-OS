@@ -7,6 +7,7 @@ body {margin: 0; padding: 0; overflow: hidden;}
 :root {
     --taskbar-height: 35px;
     --taskbar-window-list-width: 150px;
+    --titlebar-height: 30px;
     --taskbar-hover-color: #444;
     --taskbar-app-width: 30px;
 }
@@ -30,10 +31,10 @@ body {margin: 0; padding: 0; overflow: hidden;}
 
 .window iframe {
     position: absolute;
-    top: 30px;
+    top: var(--titlebar-height);
     left: 0;
     width: 100%;
-    height: calc(100% - 30px);
+    height: calc(100% - var(--titlebar-height));
     border: none;
     display: block;
 }
@@ -47,6 +48,14 @@ body {margin: 0; padding: 0; overflow: hidden;}
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.window #titlebar img {
+    max-width: 100%;
+    max-height: calc(var(--titlebar-height) - 10px);
+    width: auto;
+    height: auto;
+    display: block;
 }
 
 .window #titlebar h2 {
@@ -259,29 +268,6 @@ body {margin: 0; padding: 0; overflow: hidden;}
     z-index: 99999;
 }
 
-#searchResults .searchResult {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #ccc;
-    background-color: #333;
-    border-bottom: 1px solid #444;
-    padding: 5px;
-    cursor: pointer;
-    user-select: none;
-    transition-duration: 0.2s;
-    font-size: 13px;
-}
-
-#searchResults .searchResult:hover {
-    background-color: var(--taskbar-hover-color);
-    color: #fff;
-}
-
-#searchResults .searchResult img { vertical-align: middle; }
-
-#searchResults .searchResult p { margin: 5px 0; }
-
 #searchResults .appCategory {
     margin-bottom: 12px;
     padding: 8px 0 0 0;
@@ -309,8 +295,15 @@ body {margin: 0; padding: 0; overflow: hidden;}
     display: flex;
     align-items: center;
     gap: 8px;
+    height: 30px;
 }
-#searchResults .appCategory .app img { vertical-align: middle; }
+#searchResults .appCategory .app img {
+    max-width:30px;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    display:block;
+}
 
 #searchResults .appCategory .app:hover {
     background: var(--taskbar-hover-color);
@@ -342,7 +335,7 @@ body {margin: 0; padding: 0; overflow: hidden;}
     align-items: center;
 }
 
-#appList > .appIcon {
+#appList > div > .appIcon {
     color: #ccc;
     height: var(--taskbar-height);
     width: var(--taskbar-app-width);
@@ -358,7 +351,7 @@ body {margin: 0; padding: 0; overflow: hidden;}
     justify-content: center;
 }
 
-#appList > .appIcon > img {
+#appList > div > .appIcon > img {
     vertical-align: middle;
     max-width:100%;
     max-height:100%;
@@ -366,13 +359,13 @@ body {margin: 0; padding: 0; overflow: hidden;}
     height:auto;
 }
 
-#appList > .appIcon.open {
+#appList > div > .appIcon.open {
     height: calc(var(--taskbar-height) - 3.5px);
     border-bottom: 3.5px solid #fff;
     color: #fff;
 }
 
-#appList > .appIcon:hover {
+#appList > div > .appIcon:hover {
     background-color: var(--taskbar-hover-color);
     color: #fff;
 }

@@ -23,7 +23,7 @@
                     
                 <div id="titlebar" @mousedown="startDrag($event, window)">
                     <div style="display: inline-flex; align-items: center;">
-                        <img :src="window.icon" alt="" width="24" height="24"/>
+                        <img :src="window.icon" alt=""/>
                         <h2>{{ window.app }}</h2>
                     </div>
                     <div id="windowButtons">
@@ -50,12 +50,13 @@
                 </div>
 
                 <div id="appList">
-                    <div class="appIcon" @click="createWindow(appName)"
-                            :class="[windows.some(w => w.app === appName) ? 'open' : '']"
-                            @mouseenter="hoveredApp = appName; deselectSearchbar()" @mouseleave="hoveredApp = null"
-                            v-for="(app, appName) in apps" :key="appName"
-                            :data-app="appName">
-                        <img :src="app.icon" alt=""/>
+                    <div v-for="(app, appName) in apps" :key="appName">
+                        <div class="appIcon" @click="createWindow(appName)"
+                                :class="[windows.some(w => w.app === appName) ? 'open' : '']"
+                                @mouseenter="hoveredApp = appName; deselectSearchbar()" @mouseleave="hoveredApp = null"
+                                :data-app="appName" v-if="!app.hideFromTaskbar">
+                            <img :src="app.icon" alt=""/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,7 +76,7 @@
             <div v-for="(filteredApps, category) in filteredApps.apps" :key="category" class="appCategory">
                 <h3 class="categoryTitle">{{ category }}</h3>
                 <div v-for="app in filteredApps" class="app" @mousedown.stop="createWindow(app); deselectSearchbar()">
-                    <img :src="apps[app].icon" alt="" width="18" height="18"/>
+                    <img :src="apps[app].icon" alt=""/>
                     <p>{{ app }}</p>
                 </div>
             </div>

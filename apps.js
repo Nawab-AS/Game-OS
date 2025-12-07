@@ -5,6 +5,7 @@ const apps = {
         "icon": "https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3e5d0c2ab246786ca1d5e_86.png",
         "description": "Welcome to Mini Games!",
         "category": "Utility",
+        "hideFromTaskbar": true,
 
         "width": 600,
         "height": 400,
