@@ -55,17 +55,17 @@
                             @mouseenter="hoveredApp = appName; deselectSearchbar()" @mouseleave="hoveredApp = null"
                             v-for="(app, appName) in apps" :key="appName"
                             :data-app="appName">
-                        <img :src="app.icon" alt="" width="24" height="24"/>
+                        <img :src="app.icon" alt=""/>
                     </div>
                 </div>
             </div>
 
             <div class="rightSection">
-                <div id="timeDisplay">{{ currentTime }}</div>
+                <div id="tmeDisplay">{{ currentTime }}</div>
             </div>
         </div>
     </div>
-
+ 
 
     <div id="searchResults" v-if="search !== null" @mousedown.stop>
         <div v-if="filteredApps.length === 0">

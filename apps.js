@@ -36,7 +36,7 @@ const apps = {
 
     "Snake": {
         "url": "./games/snake/index.html",
-        "icon": "./games/snake/icon.svg",
+        "icon": "./games/snake/icon.png",
         "description": "Classic Snake game.",
         "category": "Games",
         "width": 400,
