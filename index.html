@@ -83,15 +83,17 @@
     </div>
 
 
-    <div v-for="(app, appName) in apps" :key="'windowlist-' + appName">
-        <div class="windowList" v-show="hoveredApp === appName" :data-app="appName" :style="{ left: getAppIconPosition(appName) + 'px' }"
-             @mouseenter="hoveredApp = appName" @mouseleave="hoveredApp = null">
-            <div v-for="window in windows.filter(w => w.app === appName)" :key="window.id" 
-                 class="windowListItem"
-                 @click="focusWindow($event, window.id, true)"
-                 :style="{ backgroundColor: window.hidden ? '#888' : '#555' }">
-                <p>{{ window.app }}</p>
-                <button @click.stop="closeWindow($event, window.id)">X</button>
+    <div id="windowLists">
+        <div v-for="(app, appName) in apps" :key="'windowlist-' + appName">
+            <div class="windowList" v-show="hoveredApp === appName" :data-app="appName" :style="{ left: getAppIconPosition(appName) + 'px' }"
+                 @mouseenter="hoveredApp = appName" @mouseleave="hoveredApp = null">
+                <div v-for="window in windows.filter(w => w.app === appName)" :key="window.id" 
+                     class="windowListItem"
+                     @click="focusWindow($event, window.id, true)"
+                     :style="{ backgroundColor: window.hidden ? '#888' : '#555' }">
+                    <p>{{ window.app }}</p>
+                    <button @click.stop="closeWindow($event, window.id)">X</button>
+                </div>
             </div>
         </div>
     </div>
