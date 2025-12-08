@@ -45,4 +45,15 @@ const apps = {
         "minWidth": 400,
         "minHeight": 500,
     },
+
+    "Minesweeper": {
+        "url": "./games/minesweeper/index.html",
+        "icon": "./games/minesweeper/icon.svg",
+        "description": "The classic Minesweeper game.",
+        "category": "Games",
+        "width": 400,
+        "height": 400,
+        "minWidth": 200,
+        "minHeight": 200,
+    },
 };
